@@ -11,7 +11,10 @@ import ProductList from './pages/products/ProductList'
 import ProductForm from './pages/products/ProductForm'
 import MenuConfigList from './pages/menuconfigs/MenuConfigList'
 import MenuConfigForm from './pages/menuconfigs/MenuConfigForm'
-
+import ProductRevenueAnalytics from './pages/revenues/ProductRevenueAnalytics'
+import CreateManualOrder from './pages/orders/CreateManualOrder'
+import OrderSuccessPage from './pages/orders/success/OrderSuccessPage'
+import OrderList from './pages/orders/OrderList'
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -100,8 +103,15 @@ function App() {
           <Route path="products/create" element={<ProductForm />} />
           <Route path="products/edit/:id" element={<ProductForm isEdit={true} />} />
           
+          {/* Revenue Analytics Routes */}
+          <Route path="revenue-analytics" element={<ProductRevenueAnalytics />} />
+          
+          {/* Orders Routes */}
+          <Route path="orders/create-manual" element={<CreateManualOrder />} />
+          <Route path="orders/success" element={<OrderSuccessPage />} />
+          
           <Route path="customers" element={<div>Khách hàng</div>} />
-          <Route path="orders" element={<div>Đơn hàng</div>} />
+          <Route path="orders" element={<OrderList />} />
           <Route path="reviews" element={<div>Đánh giá</div>} />
           <Route path="settings" element={<div>Cài đặt</div>} />
         </Route>
