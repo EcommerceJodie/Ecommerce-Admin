@@ -7,6 +7,11 @@ import CategoryList from '../pages/categories/CategoryList';
 import CategoryForm from '../pages/categories/CategoryForm';
 import MenuConfigList from '../pages/menuconfigs/MenuConfigList';
 import MenuConfigForm from '../pages/menuconfigs/MenuConfigForm';
+import ProductRevenueAnalytics from '../pages/revenues/ProductRevenueAnalytics';
+import CreateManualOrder from '../pages/orders/CreateManualOrder';
+import OrderSuccessPage from '../pages/orders/success/OrderSuccessPage';
+import OrderList from '../pages/orders/OrderList';
+import OrderDetail from '../pages/orders/OrderDetail';
 
 // Guard component to check if user is authenticated
 const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -28,40 +33,66 @@ const routes: RouteObject[] = [
     ),
     children: [
       {
-        path: '/',
+        path: '',
+        element: <Dashboard />,
+      },
+      {
+        path: 'dashboard',
         element: <Dashboard />,
       },
       // Category routes
       {
-        path: '/categories',
+        path: 'categories',
         element: <CategoryList />,
       },
       {
-        path: '/categories/create',
+        path: 'categories/create',
         element: <CategoryForm />,
       },
       {
-        path: '/categories/edit/:id',
+        path: 'categories/edit/:id',
         element: <CategoryForm isEdit={true} />,
       },
       // Menu Config routes
       {
-        path: '/menu-configs',
+        path: 'menu-configs',
         element: <MenuConfigList />,
       },
       {
-        path: '/menu-configs/create',
+        path: 'menu-configs/create',
         element: <MenuConfigForm />,
       },
       {
-        path: '/menu-configs/edit/:id',
+        path: 'menu-configs/edit/:id',
         element: <MenuConfigForm isEdit={true} />,
+      },
+      // Revenue Analytics routes
+      {
+        path: 'revenue-analytics',
+        element: <ProductRevenueAnalytics />,
+      },
+      // Order routes
+      {
+        path: 'orders',
+        element: <OrderList />,
+      },
+      {
+        path: 'orders/create-manual',
+        element: <CreateManualOrder />,
+      },
+      {
+        path: 'orders/success',
+        element: <OrderSuccessPage />,
+      },
+      {
+        path: 'orders/:id',
+        element: <OrderDetail />,
       },
       // Add other routes here as needed
     ],
   },
   {
-    path: '/login',
+    path: 'login',
     element: <Login />,
   },
   {

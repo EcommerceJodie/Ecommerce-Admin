@@ -135,6 +135,15 @@ class ProductsApiService {
   }
   
   /**
+   * Xóa nhiều sản phẩm cùng lúc
+   * @param productIds Mảng các ID sản phẩm cần xóa
+   * @returns 
+   */
+  public async batchDelete(productIds: string[]): Promise<void> {
+    return apiClient.post<void>(`${this.baseEndpoint}/batch`, { productIds });
+  }
+  
+  /**
    * Thêm hình ảnh cho sản phẩm
    * @param productId ID của sản phẩm
    * @param formData Form data chứa hình ảnh
@@ -190,6 +199,23 @@ class ProductsApiService {
    */
   public async getFeaturedProducts(): Promise<Product[]> {
     return apiClient.get<Product[]>(`${this.baseEndpoint}/Featured`);
+  }
+  
+  /**
+   * Nhân bản (duplicate) sản phẩm
+   * @param productId ID của sản phẩm cần nhân bản
+   * @param duplicateData Dữ liệu cho sản phẩm mới
+   * @returns Sản phẩm mới được tạo ra từ bản sao
+   */
+  public async duplicateProduct(
+    productId: string, 
+    duplicateData: { 
+      NewProductName: string; 
+      NewProductSku: string; 
+      NewProductSlug: string;
+    }
+  ): Promise<Product> {
+    return apiClient.post<Product>(`${this.baseEndpoint}/${productId}/duplicate`, duplicateData);
   }
 }
 
