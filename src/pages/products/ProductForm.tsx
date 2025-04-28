@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { FiSave, FiX, FiUpload, FiTrash2, FiStar } from 'react-icons/fi';
 import { productsApiService } from '../../services/api/products.service';
 import { categoriesApiService } from '../../services/api/categories.service';
-import { Product } from '../../models/Product';
 
 interface ProductFormProps {
   isEdit?: boolean;
@@ -96,13 +95,23 @@ const ProductForm = ({ isEdit = false }: ProductFormProps) => {
         metaDescription: product.metaDescription || ''
       });
       
-      if (product.imageUrls && product.imageUrls.length > 0) {
-        // Giả định: imageUrls chứa các URL của hình ảnh
-        // Trong dự án thực tế, cần API để lấy thông tin chi tiết về hình ảnh
+      if (product.imageUrlsWithDetails && product.imageUrlsWithDetails.length > 0) {
+        // Sử dụng thông tin chi tiết về hình ảnh từ API
+        const images = product.imageUrlsWithDetails.map(img => ({
+          id: img.id, // Sử dụng ID thực từ API
+          imageUrl: img.imageUrl,
+          isMainImage: img.isMainImage,
+          isNew: false,
+          isDeleted: false
+        }));
+        
+        setProductImages(images);
+      } else if (product.imageUrls && product.imageUrls.length > 0) {
+        // Fallback nếu không có imageUrlsWithDetails
         const images = product.imageUrls.map((url, index) => ({
-          id: `img-${index}`, // Ideally, this should be the actual image ID from the backend
+          id: `img-${index}`, // ID giả tạm thời
           imageUrl: url,
-          isMainImage: index === 0, // Giả định hình đầu tiên là hình chính
+          isMainImage: index === 0,
           isNew: false,
           isDeleted: false
         }));

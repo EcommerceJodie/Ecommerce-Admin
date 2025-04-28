@@ -16,6 +16,7 @@ export interface Product {
   createdAt: string;
   updatedAt?: string;
   imageUrls: string[];
+  imageUrlsWithDetails?: ProductImage[];
 }
 
 export interface ProductImage {
