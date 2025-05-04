@@ -122,7 +122,7 @@ const Sidebar = () => {
         </div>
       </nav>
       
-      <div className="mt-auto py-4 px-4 border-t border-gray-200 absolute bottom-0 w-full">
+      {/* <div className="mt-auto py-4 px-4 border-t border-gray-200 absolute bottom-0 w-full">
         <div className="flex items-center">
           <div className="flex-shrink-0">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -136,7 +136,7 @@ const Sidebar = () => {
             </NavLink>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

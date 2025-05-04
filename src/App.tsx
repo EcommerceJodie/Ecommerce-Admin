@@ -15,6 +15,9 @@ import ProductRevenueAnalytics from './pages/revenues/ProductRevenueAnalytics'
 import CreateManualOrder from './pages/orders/CreateManualOrder'
 import OrderSuccessPage from './pages/orders/success/OrderSuccessPage'
 import OrderList from './pages/orders/OrderList'
+import CustomerList from './pages/customers/CustomerList'
+import CustomerDetail from './pages/customers/CustomerDetail'
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -109,9 +112,12 @@ function App() {
           {/* Orders Routes */}
           <Route path="orders/create-manual" element={<CreateManualOrder />} />
           <Route path="orders/success" element={<OrderSuccessPage />} />
-          
-          <Route path="customers" element={<div>Khách hàng</div>} />
           <Route path="orders" element={<OrderList />} />
+          
+          {/* Customers Routes */}
+          <Route path="customers" element={<CustomerList />} />
+          <Route path="customers/:id" element={<CustomerDetail />} />
+          
           <Route path="reviews" element={<div>Đánh giá</div>} />
           <Route path="settings" element={<div>Cài đặt</div>} />
         </Route>

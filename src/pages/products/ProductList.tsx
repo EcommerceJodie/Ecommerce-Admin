@@ -45,6 +45,13 @@ const ProductList = () => {
     NewProductSlug: ''
   });
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
+  
+  // State cho modal xóa sản phẩm
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
+  
+  // State cho modal xóa hàng loạt
+  const [showBatchDeleteModal, setShowBatchDeleteModal] = useState(false);
 
   // Lấy danh sách danh mục
   const fetchCategories = useCallback(async () => {
@@ -127,15 +134,27 @@ const ProductList = () => {
   }, [fetchProducts, fetchCategories, fetchProductsSalesData]);
 
   const handleDeleteProduct = async (id: string) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
-      try {
-        await productsApiService.delete(id);
-        fetchProducts();
-      } catch (err) {
-        setError('Không thể xóa sản phẩm. Vui lòng thử lại sau.');
-        console.error('Error deleting product:', err);
-      }
+    setProductToDelete(id);
+    setShowDeleteModal(true);
+  };
+  
+  const confirmDeleteProduct = async () => {
+    if (!productToDelete) return;
+    
+    try {
+      await productsApiService.delete(productToDelete);
+      setShowDeleteModal(false);
+      setProductToDelete(null);
+      fetchProducts();
+    } catch (err) {
+      setError('Không thể xóa sản phẩm. Vui lòng thử lại sau.');
+      console.error('Error deleting product:', err);
     }
+  };
+  
+  const cancelDeleteProduct = () => {
+    setShowDeleteModal(false);
+    setProductToDelete(null);
   };
 
   const handlePageChange = (page: number) => {
@@ -184,17 +203,23 @@ const ProductList = () => {
 
   const handleBatchDelete = async () => {
     if (selectedProducts.length === 0) return;
-    
-    if (window.confirm(`Bạn có chắc chắn muốn xóa ${selectedProducts.length} sản phẩm đã chọn?`)) {
-      try {
-        await productsApiService.batchDelete(selectedProducts);
-        setSelectedProducts([]);
-        fetchProducts();
-      } catch (err) {
-        setError('Không thể xóa các sản phẩm đã chọn. Vui lòng thử lại sau.');
-        console.error('Error deleting products:', err);
-      }
+    setShowBatchDeleteModal(true);
+  };
+  
+  const confirmBatchDelete = async () => {
+    try {
+      await productsApiService.batchDelete(selectedProducts);
+      setSelectedProducts([]);
+      setShowBatchDeleteModal(false);
+      fetchProducts();
+    } catch (err) {
+      setError('Không thể xóa các sản phẩm đã chọn. Vui lòng thử lại sau.');
+      console.error('Error deleting products:', err);
     }
+  };
+  
+  const cancelBatchDelete = () => {
+    setShowBatchDeleteModal(false);
   };
 
   const handleDuplicateProduct = async (id: string) => {
@@ -252,8 +277,8 @@ const ProductList = () => {
       setIsDuplicating(false);
       setProductToDuplicate(null);
       
-      // Nếu thành công, hiển thị thông báo và làm mới danh sách
-      alert(`Đã nhân bản thành công sản phẩm thành: ${duplicatedProduct.productName}`);
+      // Hiển thị thông báo thành công trong modal
+      setError(`Đã nhân bản thành công sản phẩm thành: ${duplicatedProduct.productName}`);
       fetchProducts();
     } catch (err) {
       setIsLoading(false);
@@ -274,6 +299,60 @@ const ProductList = () => {
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
+      {/* Modal xác nhận xóa sản phẩm */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">Xác nhận xóa sản phẩm</h2>
+            <p className="text-gray-600 mb-4">
+              Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác.
+            </p>
+            
+            <div className="flex justify-end space-x-2 mt-6">
+              <button
+                onClick={cancelDeleteProduct}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={confirmDeleteProduct}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
+                Xóa
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Modal xác nhận xóa hàng loạt */}
+      {showBatchDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">Xác nhận xóa hàng loạt</h2>
+            <p className="text-gray-600 mb-4">
+              Bạn có chắc chắn muốn xóa {selectedProducts.length} sản phẩm đã chọn? Hành động này không thể hoàn tác.
+            </p>
+            
+            <div className="flex justify-end space-x-2 mt-6">
+              <button
+                onClick={cancelBatchDelete}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={confirmBatchDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
+                Xóa
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Modal nhân bản sản phẩm */}
       {isDuplicating && productToDuplicate && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
